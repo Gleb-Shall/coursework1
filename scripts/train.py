@@ -129,6 +129,10 @@ def train_model(
     # Загрузка модели
     model, tokenizer = load_model_and_tokenizer(model_name)
     
+    # Enable gradient checkpointing if model supports it
+    if hasattr(model, 'gradient_checkpointing_enable'):
+        model.gradient_checkpointing_enable()
+    
     # Загрузка данных
     train_dataset = TranslationDataset(train_file, tokenizer, max_length)
     val_dataset = TranslationDataset(val_file, tokenizer, max_length)
@@ -145,26 +149,31 @@ def train_model(
         output_dir=output_dir,
         num_train_epochs=num_epochs,
         per_device_train_batch_size=batch_size,
-        per_device_eval_batch_size=batch_size,
+        per_device_eval_batch_size=max(1, batch_size // 2),  # Smaller eval batch to save memory
         gradient_accumulation_steps=gradient_accumulation_steps,
         learning_rate=learning_rate,
         warmup_steps=warmup_steps,
         logging_steps=logging_steps,
-        eval_steps=eval_steps,
+        eval_steps=max(eval_steps, 1000),  # Less frequent evaluation to save memory
         save_steps=save_steps,
         eval_strategy="steps",
+        eval_accumulation_steps=2,  # Accumulate eval predictions to save memory
         save_strategy="steps",
         load_best_model_at_end=True,
         metric_for_best_model="bleu",
         greater_is_better=True,
         fp16=fp16,
-        dataloader_num_workers=4,
+        dataloader_num_workers=2,  # Reduced to avoid memory issues
         report_to="none",  # Отключаем wandb/tensorboard по умолчанию
         save_total_limit=3,
-        push_to_hub=False
+        push_to_hub=False,
+        dataloader_pin_memory=False,  # Reduce memory usage
+        gradient_checkpointing=True,  # Enable gradient checkpointing to save memory
+        prediction_loss_only=False,  # We need predictions for metrics
+        remove_unused_columns=False  # Keep all columns
     )
     
-    # Функция для вычисления метрик
+    # Функция для вычисления метрик (simplified to save memory)
     compute_metrics_fn = create_compute_metrics(tokenizer)
     
     # Trainer
@@ -177,6 +186,10 @@ def train_model(
         tokenizer=tokenizer,
         compute_metrics=compute_metrics_fn
     )
+    
+    # Clear cache before training
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
     
     # Обучение
     print("Начало обучения...")
