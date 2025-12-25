@@ -10,10 +10,10 @@ from typing import Dict, List
 
 import torch
 from torch.utils.data import Dataset, DataLoader
+from torch.optim import AdamW
 from transformers import (
     MarianMTModel,
     MarianTokenizer,
-    AdamW,
     get_linear_schedule_with_warmup,
     TrainingArguments,
     Trainer,

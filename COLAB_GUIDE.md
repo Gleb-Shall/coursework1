@@ -29,10 +29,10 @@
    %cd coursework1
    ```
 
-### Option B: Clone from GitHub (if you have a repo)
+### Option B: Clone from GitHub (Recommended)
 
 ```python
-!git clone https://github.com/yourusername/coursework1.git
+!git clone https://github.com/Gleb-Shall/coursework1.git
 %cd coursework1
 ```
 
