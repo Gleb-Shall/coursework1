@@ -136,6 +136,7 @@ python scripts/compare_models.py \
 ## Датасет
 
 **WikiMatrix EN-RU** с фильтрацией математических текстов.
+
 **OPUS BOOK** - альтернатива (тестовый датасет)
 
 ### Загрузка данных
@@ -156,7 +157,7 @@ python scripts/download_data.py --use_alternative
    - Прямая ссылка EN-RU: https://opus.nlpl.eu/WikiMatrix/en&ru/v1/WikiMatrix#download
    - Общий список: https://opus.nlpl.eu/results/en&ru/corpus-result-table
    - Скачайте файлы в формате TMX или Moses
-   - Конвертируйте в JSONL формат (см. DATA_SOURCES.md)
+   - Конвертируйте в JSONL формат
 
 ### Фильтрация данных
 
