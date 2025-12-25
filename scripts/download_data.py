@@ -22,11 +22,13 @@ def download_from_huggingface(output_dir: str, max_samples: int = None, logger=N
         
         logger.info("Попытка загрузки через HuggingFace...")
         
-        # Пробуем разные варианты названий
+        # Пробуем разные варианты названий WikiMatrix
         dataset_names = [
             ("facebook/wikimatrix", "en-ru"),
             ("wikimatrix", "en-ru"),
             ("opus/wikimatrix", "en-ru"),
+            # Попробуем также другие варианты
+            ("GEM/wiki_auto_large", None),  # Alternative if available
         ]
         
         for dataset_name, config in dataset_names:
