@@ -152,7 +152,7 @@ def train_model(
         logging_steps=logging_steps,
         eval_steps=eval_steps,
         save_steps=save_steps,
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         save_strategy="steps",
         load_best_model_at_end=True,
         metric_for_best_model="bleu",
